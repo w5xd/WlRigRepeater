@@ -182,7 +182,7 @@ namespace RigRepeater
                         iface.GetIPProperties().UnicastAddresses;
                     foreach (System.Net.NetworkInformation.UnicastIPAddressInformation ad in col)
                     {
-                        /* This calculation if IPv4 specific....   */
+                        /* This calculation is IPv4 specific....   */
                         System.Net.IPAddress broadcast = ad.Address;
                         byte[] addr = broadcast.GetAddressBytes();
                         byte[] mask = ad.IPv4Mask.GetAddressBytes();
