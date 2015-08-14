@@ -119,6 +119,7 @@
             this.Controls.Add(this.listBoxRemote);
             this.Controls.Add(this.listBoxLocal);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "WriteLog Rig Control Repeater";
             this.Load += new System.EventHandler(this.MainForm_Load);
