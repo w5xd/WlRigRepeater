@@ -52,6 +52,7 @@ namespace RigRepeater
             }
             m_listener = new FreqUpdateUdpListener();
             m_listener.init(new FreqUpdateUdpListener.OnFreqUpdated( OnReceivedFreq));
+            timer1.Enabled = true;
         }
 
         /* As we find Entry Window's locally (on WriteLog running on this machine)
@@ -345,7 +346,8 @@ namespace RigRepeater
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            m_listener.stop();
+            if (m_listener != null)
+                m_listener.stop();
         }
     }
 }
