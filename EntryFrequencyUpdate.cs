@@ -17,13 +17,13 @@ namespace RigRepeater
         public short Mode;
 
         [NonSerialized()]
-        public WriteLogClrTypes.ISingleEntry EntryWindow;
+        public WriteLogClrTypes.ISingleEntry EntryWindow; // COM interface we used to read this data
 
         [NonSerialized()]
-        public EntryFrequencyUpdate LinkUpdatesFrom;
+        public EntryFrequencyUpdate LinkUpdatesFrom;    // If we are linked, here is who we are linked to
 
         [NonSerialized()]
-        public int ListIndex = 0;
+        public int ListIndex = 0;   // placement in our containing ListBox
 
         public EntryFrequencyUpdate(short n, short lr, double tx, double rx, short split, short mode)
         {
@@ -35,7 +35,7 @@ namespace RigRepeater
             Mode = mode;
         }
 
-        String LR()
+        String LR() // display the LeftRight setting of an Entry Window
         {
             switch (LeftRight)
             {
@@ -44,7 +44,7 @@ namespace RigRepeater
                 case 2: return "3";
                 case 3: return "4";
                 default:
-                return "?";
+                return "?"; // User never set Left/Right/3/4
             }
         }
 
@@ -53,8 +53,9 @@ namespace RigRepeater
             return other.NetLetter == NetLetter && other.LeftRight == LeftRight;
         }
 
+        // all the data settings are equal?
         public bool Equals(EntryFrequencyUpdate other)
-        {
+        {   
             return TxFreq == other.TxFreq &&
                 RxFreq == other.RxFreq &&
                 Mode == other.Mode &&
@@ -63,6 +64,7 @@ namespace RigRepeater
                 LeftRight == other.LeftRight;
         }
 
+        // tuned to (exactly) the same frequency?
         public bool SameFrequency(EntryFrequencyUpdate other)
         {
             return TxFreq == other.TxFreq &&
@@ -71,6 +73,7 @@ namespace RigRepeater
                 Split == other.Split;
         }
 
+        // match the frequency of other
         public void UpdateFrom(EntryFrequencyUpdate other)
         {
             TxFreq = other.TxFreq;
@@ -79,12 +82,15 @@ namespace RigRepeater
             Split = other.Split;
         }
 
+        // display in the ListBox 
         public override string ToString()
         {
             byte[] byteArray = new byte[1];
             short nl = NetLetter;
             if (nl == 0)
-            {
+            {   // NetLetter ASCII for 'A', 'B', etc.
+                // unless not linked to network, in which case it is zero, which we convert 
+                // here to "?"
                 nl = (short)System.Text.Encoding.UTF8.GetBytes("?")[0];
             }
             byteArray[0] = (byte)nl;

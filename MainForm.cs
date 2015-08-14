@@ -54,6 +54,8 @@ namespace RigRepeater
             m_listener.init(new FreqUpdateUdpListener.OnFreqUpdated( OnReceivedFreq));
         }
 
+        /* As we find Entry Window's locally (on WriteLog running on this machine)
+        ** update the local ListBox */
         private void AddOrUpdateLocal(EntryFrequencyUpdate efu)
         {
             foreach (Object o in listBoxLocal.Items)
@@ -71,6 +73,10 @@ namespace RigRepeater
             efu.ListIndex = listBoxLocal.Items.Add(efu);         
         }
 
+        /* As we find Entry Window's remotely (via UDP)
+        ** update the remote ListBox. Our UDP listener hears our own
+        ** UDP sends. They are not filted out here, so they appear
+        ** in both ListBox's. That is not really a problem.*/
         private void AddOrUpdateRemote(EntryFrequencyUpdate efu)
         {
             bool found = false;
@@ -89,6 +95,8 @@ namespace RigRepeater
             }
             if (!found)
                 efu.ListIndex = listBoxRemote.Items.Add(efu);
+            /* on hearing from a remote Entry Window rig,
+            ** see if its linked, and, if so, update the local Entry Window */
             foreach (Object o in listBoxLocal.Items)
             {
                 EntryFrequencyUpdate localEntry = o as EntryFrequencyUpdate;
@@ -97,6 +105,9 @@ namespace RigRepeater
                 {
                     if (linked.SameRig(efu) && localEntry.EntryWindow != null)
                     {
+                        /* The SameFrequency/UpdateFrom routine is an optimization
+                        ** that prevents multiple quick updates in the case
+                        ** where the rig takes time to update */
                         if (!localEntry.SameFrequency(efu))
                         {
                             localEntry.EntryWindow.SetLogFrequencyEx(efu.Mode, efu.RxFreq, efu.TxFreq, efu.Split);
@@ -113,6 +124,7 @@ namespace RigRepeater
             List<EntryFrequencyUpdate> toSend = new List<EntryFrequencyUpdate>();
             try
             {
+                // iterate through the local Entry Window's
                 short netLetter = m_wl.NetLetter;
                 for (short i = 0; ; i++)
                 {
@@ -140,6 +152,7 @@ namespace RigRepeater
             }
             if (toSend.Any())
             {
+                // Send a UDP update (one message) for all our active Entry Window rigs.
                 SoapFormatter formatter = new SoapFormatter();
                 byte[] bytes;
                 using (MemoryStream stream = new MemoryStream())

@@ -17,6 +17,8 @@ namespace RigRepeater
         public delegate void OnFreqUpdated(EntryFrequencyUpdate e);
 
         OnFreqUpdated m_notify;
+
+        // The UDP port number we use is found in our .exe_config file.
         public static int UDP_PORT = 
             int.Parse(System.Configuration.ConfigurationSettings.AppSettings["UDP_PORT"].ToString());
 
@@ -44,6 +46,7 @@ namespace RigRepeater
             listener.BeginReceive(new AsyncCallback(ReceiveDone), null);
         }
 
+        // on a different thread
         void ReceiveDone(IAsyncResult ar)
         {
             byte[] got;
