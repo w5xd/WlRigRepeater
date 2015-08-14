@@ -118,6 +118,7 @@
             this.Controls.Add(this.buttonLink);
             this.Controls.Add(this.listBoxRemote);
             this.Controls.Add(this.listBoxLocal);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";

@@ -25,17 +25,29 @@ namespace RigRepeater
         UdpClient listener;
         IPEndPoint groupEP;
 
-        public void init(OnFreqUpdated v)
+        public bool init(OnFreqUpdated v)
         {
-            listener = new UdpClient(UDP_PORT);
+            try
+            {
+                listener = new UdpClient(UDP_PORT);
+            }
+            catch (System.Net.Sockets.SocketException e)
+            {
+                if (e.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                    return false;
+                else
+                    throw;
+            }
             m_notify = v;
             StartListener();
+            return true;
         }
 
         public void stop()
         {
             m_notify = null;
-            listener.Close();
+            if (listener != null)
+                listener.Close();
         }
 
         private void StartListener()

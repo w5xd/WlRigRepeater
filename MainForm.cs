@@ -51,7 +51,14 @@ namespace RigRepeater
                 Close();
             }
             m_listener = new FreqUpdateUdpListener();
-            m_listener.init(new FreqUpdateUdpListener.OnFreqUpdated( OnReceivedFreq));
+            if (!m_listener.init(new FreqUpdateUdpListener.OnFreqUpdated( OnReceivedFreq)))
+            {
+                MessageBox.Show(String.Format(
+                    "The UDP port number {0} is already in use. " +
+                    "Maybe you already have RigRepeater running? Otherwise, edit RigRepeater.exe_config ON ALL NETWORKED PCs and change UDP_PORT",
+                    FreqUpdateUdpListener.UDP_PORT));
+                Close();
+            }
             timer1.Enabled = true;
         }
 
@@ -230,11 +237,14 @@ namespace RigRepeater
             if ((e.Index >= 0) && (e.Index < listBoxLocal.Items.Count))
             {
                 EntryFrequencyUpdate efu = listBoxLocal.Items[e.Index] as EntryFrequencyUpdate;
+                Font itemFont = e.Font;
+                if (efu.LinkUpdatesFrom != null)
+                {
+                    itemFont = new Font(e.Font, FontStyle.Bold | FontStyle.Italic);
+                }
                 e.Graphics.DrawString(efu.ToString(),
-                    e.Font, 
-                    efu.LinkUpdatesFrom == null 
-                        ? new SolidBrush(e.ForeColor) :
-                           new SolidBrush(Color.Red),  // Linked Entry windows are drawn Red.
+                    itemFont, 
+                     new SolidBrush(e.ForeColor),
                     e.Bounds);
             }
             e.DrawFocusRectangle();
