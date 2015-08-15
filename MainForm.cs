@@ -49,6 +49,7 @@ namespace RigRepeater
             {
                 MessageBox.Show("WriteLog is not running");
                 Close();
+                return;
             }
             m_listener = new FreqUpdateUdpListener();
             if (!m_listener.init(new FreqUpdateUdpListener.OnFreqUpdated( OnReceivedFreq)))
@@ -58,7 +59,10 @@ namespace RigRepeater
                     "Maybe you already have RigRepeater running? Otherwise, edit RigRepeater.exe_config ON ALL NETWORKED PCs and change UDP_PORT",
                     FreqUpdateUdpListener.UDP_PORT));
                 Close();
+                return;
             }
+            timer1.Interval =
+                int.Parse(System.Configuration.ConfigurationSettings.AppSettings["UPDATE_INTERVAL_MSEC"].ToString());
             timer1.Enabled = true;
         }
 

@@ -59,7 +59,7 @@ namespace RigRepeater
         }
 
         // on a different thread
-        void ReceiveDone(IAsyncResult ar)
+        private void ReceiveDone(IAsyncResult ar)
         {
             byte[] got;
             try
